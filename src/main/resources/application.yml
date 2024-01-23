@@ -1,0 +1,29 @@
+spring:
+  cloud:
+    function:
+      definition: jsProducer;jsConsumer;
+    stream:
+      function:
+        bindings:
+          jsProducer-out-0: producer-test
+          jsConsumer-in-0: consumer-test
+      kafka:
+        binder:
+          brokers: localhost:9092,localhost:9093,localhost:9094
+          auto-create-topics: false
+          required-acks: 0
+          configuration:
+            key.serializer: org.apache.kafka.common.serialization.StringSerializer
+        bindings:
+          consumer-test:
+            consumer:
+              start-offset: latest
+      bindings:
+        consumer-test:
+          group: js-consumer-group
+          destination: js-json-topic
+          consumer:
+            concurrency: 1
+        producer-test:
+          destination: js-json-topic
+          contentType: application/json
